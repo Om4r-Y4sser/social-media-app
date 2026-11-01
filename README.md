@@ -1,7 +1,7 @@
 # Social Media App
 
 A modern, responsive social media application inspired by Reddit, built with **React, TypeScript, and Tailwind CSS**. Users can create and interact with posts, join conversations, manage their profiles, and stay connected through notifications.
-
+https://social-media-app-nine-pied.vercel.app
 ## ✨ Features
 
 - **Authentication** – User registration and login.
