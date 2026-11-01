@@ -23,25 +23,41 @@ export default function Home() {
   >({
     queryKey: ["getAllPost"],
     queryFn: getPost,
-  
   });
+
   if (isLoading) {
     return <LoaderApi />;
   }
+
   if (isError) {
-    return <p> {error.message}</p>;
+    return (
+      <div className="bg-white dark:bg-[#1a1a1b] border border-red-200 dark:border-red-900/50 rounded-xl p-6 text-center shadow-2xs">
+        <p className="text-sm font-semibold text-red-600 dark:text-red-400">
+          {error.message || "Failed to load posts"}
+        </p>
+      </div>
+    );
   }
-// console.log(data?.data);
+
+  const posts = data?.data.data.posts || [];
 
   return (
-    <>
-      <div className="m-4">
-        <CreatePost />
-      </div>
+    <div className="w-full space-y-3">
+      {/* Create Post Prompt Box */}
+      <CreatePost />
 
-      {data?.data.data.posts.map((post: Post) => {
-        return <PostCard key={post._id} post={post} postDetails={false} />;
-      })}
-    </>
+      {/* Feed Posts */}
+      {posts.length > 0 ? (
+        posts.map((post: Post) => (
+          <PostCard key={post._id} post={post} postDetails={false} />
+        ))
+      ) : (
+        <div className="bg-white dark:bg-[#1a1a1b] border border-gray-200 dark:border-[#343536] rounded-xl p-8 text-center shadow-2xs">
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+            No posts in your feed yet. Be the first to share something!
+          </p>
+        </div>
+      )}
+    </div>
   );
 }

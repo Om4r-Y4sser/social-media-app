@@ -159,7 +159,7 @@ export default function PostCard({ post, postDetails = false }: PostCardProps) {
       toast.success("Post shared successfully");
       query.invalidateQueries({ queryKey: ["getAllPost"] });
       query.invalidateQueries({ queryKey: ["getPostDetails"] });
-       query.invalidateQueries({
+      query.invalidateQueries({
         queryKey: ["getUserPosts"],
       });
     },
@@ -214,8 +214,6 @@ export default function PostCard({ post, postDetails = false }: PostCardProps) {
     });
   };
 
-
-
   function getAllComments() {
     return axios.get<CommentsResponse>(
       `https://route-posts.routemisr.com/posts/${_id}/comments?page=1&limit=10`,
@@ -250,7 +248,7 @@ export default function PostCard({ post, postDetails = false }: PostCardProps) {
   const displayedPrivacy = isSharedPost ? originalPost?.privacy : post.privacy;
 
   return (
-    <div className="w-full relative mb-3 bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-5 shadow-sm border border-gray-100 dark:border-slate-800 transition-colors duration-300">
+    <article className="w-full relative bg-white dark:bg-[#1a1a1b] rounded-xl p-3.5 sm:p-4 shadow-2xs border border-gray-200 dark:border-[#343536] hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-150">
       {isSharedPost && (
         <PostHeaderShare
           user={user}
@@ -307,7 +305,7 @@ export default function PostCard({ post, postDetails = false }: PostCardProps) {
         postDetails={Boolean(postDetails)}
       />
 
-      <div className="space-y-2 mt-3 mb-2">
+      <div className="space-y-2 mt-2">
         {postDetails
           ? data?.data?.data?.comments?.map((comment: Comment) => (
               <TopComment
@@ -332,7 +330,7 @@ export default function PostCard({ post, postDetails = false }: PostCardProps) {
         <div
           className={`${
             postDetails ? "hidden" : "block"
-          } shrink-0 p-3 sm:p-4 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 z-10`}
+          } shrink-0 pt-2 mt-2 border-t border-gray-100 dark:border-[#272729]`}
         >
           <CreateComment
             postId={post._id}
@@ -341,7 +339,7 @@ export default function PostCard({ post, postDetails = false }: PostCardProps) {
         </div>
       )}
 
-      {/* استدعاء مودل التعديل (Edit Post Modal) */}
+      {/* Edit Post Modal */}
       <CreatePostModal
         isOpen={isEditOpen}
         onClose={() => setIsEditOpen(false)}
@@ -355,6 +353,6 @@ export default function PostCard({ post, postDetails = false }: PostCardProps) {
         handleImageChange={handleEditImageChange}
         setIsEditedLocally={setIsEditedLocally}
       />
-    </div>
+    </article>
   );
 }

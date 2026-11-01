@@ -3,9 +3,8 @@ import toast from 'react-hot-toast';
 export function showDeleteConfirm(onConfirm: () => void, message: string = "Are you sure you want to delete this item?") {
   toast(
     (t) => (
-      /* 👈 ضفنا هنا الخلفية، البادينج، والظل عشان الرسالة تظهر بوضوح فوق الصفحة */
-      <div className="flex flex-col gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-700 w-72">
-        <p className="font-medium text-sm text-gray-900 dark:text-white">
+      <div className="flex flex-col gap-3 bg-white dark:bg-[#1a1a1b] p-4 rounded-xl shadow-2xl border border-gray-200 dark:border-[#343536] w-72">
+        <p className="font-medium text-xs sm:text-sm text-gray-900 dark:text-white">
           {message}
         </p>
 
@@ -13,7 +12,7 @@ export function showDeleteConfirm(onConfirm: () => void, message: string = "Are 
           <button
             type="button"
             onClick={() => toast.dismiss(t.id)}
-            className="rounded-xl bg-gray-100 dark:bg-slate-700 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-600 transition"
+            className="rounded-full bg-gray-100 dark:bg-[#272729] px-3.5 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#343536] transition cursor-pointer"
           >
             Cancel
           </button>
@@ -24,7 +23,7 @@ export function showDeleteConfirm(onConfirm: () => void, message: string = "Are 
               toast.dismiss(t.id);
               onConfirm();
             }}
-            className="rounded-xl bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition"
+            className="rounded-full bg-red-600 hover:bg-red-700 px-3.5 py-1.5 text-xs font-semibold text-white transition cursor-pointer shadow-2xs"
           >
             Delete
           </button>

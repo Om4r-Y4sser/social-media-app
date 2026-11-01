@@ -1,4 +1,4 @@
-import  { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { MoreHorizontal, Edit3, Trash2 } from "lucide-react";
 
 interface OptionsMenuProps {
@@ -46,27 +46,27 @@ export default function OptionsMenu({
         onClick={() => setShowOptions((previous) => !previous)}
         aria-label="Options"
         aria-expanded={showOptions}
-        className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+        className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-[#272729] transition cursor-pointer"
       >
-        <MoreHorizontal className="w-4 h-4 sm:w-5 sm:h-5" />
+        <MoreHorizontal className="w-4 h-4" />
       </button>
 
       {showOptions && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-48 overflow-hidden rounded-xl border border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg">
-          {/* زر التعديل */}
+        <div className="absolute right-0 top-full mt-1.5 z-50 w-44 overflow-hidden rounded-xl border border-gray-200 dark:border-[#343536] bg-white dark:bg-[#1a1a1b] shadow-xl py-1 text-left">
+          {/* Edit Button */}
           <button
             type="button"
             onClick={() => {
               setShowOptions(false);
               onEdit();
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#272729] transition cursor-pointer"
           >
-            <Edit3 className="w-4 h-4 text-[#149188]" />
+            <Edit3 className="w-3.5 h-3.5 text-[#ff4500]" />
             <span>{editLabel}</span>
           </button>
 
-          {/* زر الحذف */}
+          {/* Delete Button */}
           <button
             type="button"
             disabled={isDeleting}
@@ -74,9 +74,9 @@ export default function OptionsMenu({
               setShowOptions(false);
               onDelete();
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition disabled:opacity-50 border-t border-gray-100 dark:border-slate-700"
+            className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition disabled:opacity-50 border-t border-gray-100 dark:border-[#272729] cursor-pointer"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-3.5 h-3.5" />
             <span>{isDeleting ? "Deleting..." : deleteLabel}</span>
           </button>
         </div>

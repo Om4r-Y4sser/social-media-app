@@ -21,7 +21,7 @@ export function FollowItem({ userId, onClick }: { userId: string; onClick: () =>
   return (
     <div
       onClick={onClick}
-      className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition cursor-pointer"
+      className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#272729] transition cursor-pointer"
     >
       <img
         src={
@@ -29,13 +29,13 @@ export function FollowItem({ userId, onClick }: { userId: string; onClick: () =>
           "https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/default-profile.png"
         }
         alt={info?.name || "User"}
-        className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-slate-700"
+        className="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-[#343536] shrink-0"
       />
-      <div>
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white hover:underline">
+      <div className="min-w-0 flex-1 truncate">
+        <h4 className="text-xs font-semibold text-gray-900 dark:text-gray-100 hover:underline truncate">
           {info?.name || "Loading..."}
         </h4>
-        <p className="text-xs text-gray-400">@{info?.username || "user"}</p>
+        <p className="text-[10px] text-gray-400 dark:text-gray-500 truncate">u/{info?.username || "user"}</p>
       </div>
     </div>
   );

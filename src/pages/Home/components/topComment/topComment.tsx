@@ -272,28 +272,28 @@ export default function TopComment({
 
   return (
     <div
-      className="w-full pt-3 mt-3 border-t border-gray-100 dark:border-slate-800"
+      className="w-full pl-3 my-2 border-l-2 border-gray-200 dark:border-[#343536] transition-colors"
       dir="ltr"
     >
-      <div className="flex items-start gap-2.5 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl transition-colors duration-200">
+      <div className="flex items-start gap-2.5 bg-gray-50/70 dark:bg-[#121213] p-2.5 rounded-xl border border-gray-100 dark:border-[#272729] transition-colors duration-150">
         {comment.commentCreator?.photo ? (
           <img
             src={comment.commentCreator.photo}
             alt={creatorName}
-            className="w-8 h-8 rounded-full object-cover shrink-0 border border-gray-200 dark:border-slate-700"
+            className="w-7 h-7 rounded-full object-cover shrink-0 border border-gray-200 dark:border-[#343536] mt-0.5"
             onError={(event) => {
               event.currentTarget.style.display = "none";
             }}
           />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-[#149188] text-white flex items-center justify-center text-xs font-bold shrink-0">
+          <div className="w-7 h-7 rounded-full bg-[#ff4500] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
             {avatarLetter}
           </div>
         )}
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <h4 className="text-xs font-bold text-gray-900 dark:text-white truncate">
+            <h4 className="text-xs font-bold text-gray-900 dark:text-gray-100 truncate">
               {creatorName}
             </h4>
 
@@ -306,7 +306,7 @@ export default function TopComment({
 
               {/* Edited label من الـ localStorage */}
               {isEditedLocally && (
-                <span className="text-[10px] font-medium text-green-500">
+                <span className="text-[10px] font-medium text-amber-500">
                   • Edited
                 </span>
               )}
@@ -323,13 +323,13 @@ export default function TopComment({
           </div>
 
           {isEditing ? (
-            <div className="mt-2 space-y-3">
+            <div className="mt-2 space-y-2.5">
               <textarea
                 value={editedContent}
                 onChange={(event) => setEditedContent(event.target.value)}
                 rows={3}
                 placeholder="Write your comment..."
-                className="w-full resize-y rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3 text-sm text-gray-800 dark:text-gray-100 outline-none focus:border-[#149188]"
+                className="w-full resize-y rounded-xl border border-gray-200 dark:border-[#343536] bg-white dark:bg-[#1a1a1b] p-2.5 text-xs sm:text-sm text-gray-800 dark:text-gray-100 outline-none focus:border-[#ff4500]"
               />
 
               {previewImage && (
@@ -337,16 +337,16 @@ export default function TopComment({
                   <img
                     src={previewImage}
                     alt="Comment preview"
-                    className="max-h-64 max-w-full rounded-xl object-contain"
+                    className="max-h-60 max-w-full rounded-lg object-contain"
                   />
 
                   <button
                     type="button"
                     onClick={handleRemoveImage}
                     aria-label="Remove comment image"
-                    className="absolute right-2 top-2 rounded-full bg-black/70 p-1.5 text-white hover:bg-red-600 transition"
+                    className="absolute right-2 top-2 rounded-full bg-black/70 p-1 text-white hover:bg-red-600 transition cursor-pointer"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-3.5 w-3.5" />
                   </button>
                 </div>
               )}
@@ -362,10 +362,10 @@ export default function TopComment({
               <button
                 type="button"
                 onClick={() => imageInputRef.current?.click()}
-                className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-[#149188] hover:bg-teal-50 dark:hover:bg-slate-700 transition"
+                className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-[#ff4500] hover:bg-gray-100 dark:hover:bg-[#272729] transition cursor-pointer"
               >
-                <ImageIcon className="h-4 w-4" />
-                {previewImage ? "Change image" : "Add image"}
+                <ImageIcon className="h-3.5 w-3.5" />
+                <span>{previewImage ? "Change image" : "Add image"}</span>
               </button>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -373,28 +373,30 @@ export default function TopComment({
                   type="button"
                   onClick={handleUpdateComment}
                   disabled={updateCommentMutation.isPending}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#149188] px-3 py-2 text-xs font-semibold text-white hover:bg-[#107a72] transition disabled:cursor-not-allowed disabled:opacity-50"
+                  className="inline-flex items-center gap-1 rounded-full bg-[#ff4500] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#e03d00] transition disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer shadow-2xs"
                 >
-                  <Check className="h-4 w-4" />
-                  {updateCommentMutation.isPending
-                    ? "Saving..."
-                    : "Save Changes"}
+                  <Check className="h-3.5 w-3.5" />
+                  <span>
+                    {updateCommentMutation.isPending
+                      ? "Saving..."
+                      : "Save Changes"}
+                  </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={updateCommentMutation.isPending}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-gray-200 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-slate-600 transition disabled:opacity-50"
+                  className="inline-flex items-center gap-1 rounded-full bg-gray-200 dark:bg-[#272729] px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-[#343536] transition disabled:opacity-50 cursor-pointer"
                 >
-                  <X className="h-4 w-4" />
-                  Cancel
+                  <X className="h-3.5 w-3.5" />
+                  <span>Cancel</span>
                 </button>
               </div>
             </div>
           ) : (
             <>
-              <p className="text-xs text-gray-700 dark:text-gray-300 mt-1 break-words leading-relaxed">
+              <p className="text-xs text-gray-800 dark:text-gray-200 mt-1 break-words leading-relaxed font-normal">
                 {comment.content}
               </p>
 
@@ -402,31 +404,31 @@ export default function TopComment({
                 <img
                   src={comment.image}
                   alt="Comment"
-                  className="max-w-full h-auto max-h-80 rounded-lg mt-2 object-contain"
+                  className="max-w-full h-auto max-h-72 rounded-lg mt-2 object-contain border border-gray-200 dark:border-[#343536]"
                 />
               )}
             </>
           )}
 
           {!isEditing && (
-            <div className="flex items-center gap-4 mt-2">
+            <div className="flex items-center gap-3 mt-2">
               <button
                 type="button"
                 onClick={handleLike}
-                className={`flex items-center gap-1 text-[11px] font-medium transition ${
+                className={`flex items-center gap-1 text-[11px] font-semibold transition cursor-pointer ${
                   isLiked
-                    ? "text-red-500"
-                    : "text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+                    ? "text-[#ff4500]"
+                    : "text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
-                <Heart className={`w-3 h-3 ${isLiked ? "fill-red-500" : ""}`} />
-                <span>{likesCount > 0 ? likesCount : "Like"}</span>
+                <Heart className={`w-3 h-3 ${isLiked ? "fill-[#ff4500]" : ""}`} />
+                <span>{likesCount > 0 ? likesCount : "Upvote"}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsOpen((previous) => !previous)}
-                className="flex items-center gap-1 text-[11px] font-medium text-gray-400 dark:text-gray-500 hover:text-[#149188] transition"
+                className="flex items-center gap-1 text-[11px] font-semibold text-gray-400 dark:text-gray-500 hover:text-[#ff4500] transition cursor-pointer"
               >
                 <MessageCircle className="w-3 h-3" />
                 <span>Reply</span>
@@ -435,8 +437,8 @@ export default function TopComment({
           )}
 
           {isOpen && !isEditing && (
-            <div className="mt-2 w-full" dir="ltr">
-              <div className="w-[90%] sm:w-[85%]">
+            <div className="mt-2.5 w-full" dir="ltr">
+              <div className="w-full">
                 <CommentReplyBox
                   onClose={() => setIsOpen(false)}
                   postId={postId}
@@ -449,11 +451,11 @@ export default function TopComment({
       </div>
 
       {repliesList.length > 0 && (
-        <div className="mt-2">
+        <div className="mt-1.5 ml-2">
           <button
             type="button"
             onClick={() => setShowReplies((previous) => !previous)}
-            className="text-xs font-semibold text-[#149188] dark:text-teal-400 hover:underline flex items-center gap-1.5"
+            className="text-[11px] font-bold text-[#ff4500] hover:underline flex items-center gap-1.5 cursor-pointer"
           >
             {showReplies
               ? "Hide replies"
@@ -461,13 +463,13 @@ export default function TopComment({
           </button>
 
           {showReplies && (
-            <div className="mt-2">
+            <div className="mt-1.5 space-y-1.5">
               {isLoading && (
-                <p className="text-xs text-gray-400 mt-1">Loading replies...</p>
+                <p className="text-[11px] text-gray-400">Loading replies...</p>
               )}
 
               {isError && (
-                <p className="text-xs text-red-500 mt-1">
+                <p className="text-[11px] text-red-500">
                   {error?.message || "Failed to load replies"}
                 </p>
               )}

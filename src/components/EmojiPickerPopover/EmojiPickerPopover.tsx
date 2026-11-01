@@ -41,24 +41,24 @@ export default function EmojiPickerPopover({
 
   return (
     <div className="relative inline-block" ref={containerRef}>
-      {/* زرار فتح الإيموجي */}
+      {/* Emoji Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`p-1.5 rounded-xl transition cursor-pointer flex items-center justify-center ${
+        className={`p-1.5 rounded-lg transition cursor-pointer flex items-center justify-center ${
           isOpen
-            ? "text-[#149188] bg-slate-100 dark:bg-slate-800"
-            : "text-gray-400 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+            ? "text-[#ff4500] bg-gray-100 dark:bg-[#272729]"
+            : "text-gray-400 hover:text-[#ff4500] dark:hover:text-[#ff4500] hover:bg-gray-100 dark:hover:bg-[#272729]"
         }`}
         title="Add emoji"
       >
-        <Smile className="w-5 h-5" />
+        <Smile className="w-4 h-4" />
       </button>
 
-      {/* نافذة الإيموجي بيكر (تم ضبط التموضع بدقة للشاشات الكبيرة والموبايل) */}
+      {/* Emoji Picker Popover */}
       {isOpen && (
-        <div className="absolute left-0 bottom-full mb-2 z-50 shadow-2xl rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-150">
-          <div className="w-[300px] sm:w-[320px]">
+        <div className="absolute left-0 bottom-full mb-2 z-50 shadow-2xl rounded-2xl overflow-hidden bg-white dark:bg-[#1a1a1b] border border-gray-200 dark:border-[#343536] animate-in fade-in zoom-in-95 duration-100">
+          <div className="w-[280px] sm:w-[320px]">
             <EmojiPicker
               onEmojiClick={handleEmojiClick}
               theme={theme === "dark" ? Theme.DARK : Theme.LIGHT}

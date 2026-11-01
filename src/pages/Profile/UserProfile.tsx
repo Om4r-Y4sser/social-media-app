@@ -18,7 +18,15 @@ export default function UserProfile() {
     null,
   );
 
- 
+  useEffect(() => {
+    if (!modalType) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setModalType(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [modalType]);
+
   const { data: profileRes, isLoading: isProfileLoading } = useQuery({
     queryKey: ["getUserProfileData", userId],
     queryFn: async () => {
@@ -31,7 +39,6 @@ export default function UserProfile() {
     },
     enabled: !!userId,
   });
-
 
   const { data: postsRes, isLoading: isPostsLoading } = useQuery({
     queryKey: ["getUserPosts", userId],
@@ -58,7 +65,6 @@ export default function UserProfile() {
     }
   }, [profileData]);
 
- 
   const { mutate: handleFollow, isPending: isFollowPending } = useMutation({
     mutationFn: async () => {
       const token = localStorage.getItem("userToken");
@@ -88,29 +94,28 @@ export default function UserProfile() {
 
   if (isProfileLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <LoaderApi />
+      <div className="flex justify-center items-center py-16">
+        <LoaderApi fullScreen={false} />
       </div>
     );
   }
-
 
   const currentList =
     modalType === "followers" ? userInfo?.followers : userInfo?.following;
 
   return (
-    <div className="max-w-4xl mx-auto pb-10 bg-gray-50 dark:bg-slate-950 min-h-screen relative">
-      {/* 🟦 كارد الغلاف والبروفايل */}
-      <div className="bg-white dark:bg-slate-900 shadow-sm rounded-b-3xl overflow-hidden border-b border-gray-100 dark:border-slate-800">
+    <div className="w-full space-y-3 pb-8">
+      {/* Profile Header Card */}
+      <div className="w-full bg-white dark:bg-[#1a1a1b] rounded-xl shadow-2xs border border-gray-200 dark:border-[#343536] overflow-hidden">
         {/* Cover Photo */}
-        <div className="h-48 md:h-72 w-full bg-gradient-to-r from-[#149188] to-teal-700 relative overflow-hidden">
+        <div className="h-32 sm:h-44 w-full bg-gradient-to-r from-[#ff4500] via-[#ff6a00] to-[#1a1a1b] relative">
           <div className="absolute inset-0 bg-black/10"></div>
         </div>
 
         {/* Profile Details Section */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative pb-6">
-          <div className="flex flex-col md:flex-row items-center md:items-end justify-between -mt-16 md:-mt-20 mb-4 gap-4">
-            <div className="flex flex-col md:flex-row items-center md:items-end gap-6 text-center md:text-left">
+        <div className="px-5 sm:px-6 pb-5 relative">
+          <div className="flex flex-col sm:flex-row items-center sm:items-end justify-between -mt-14 sm:-mt-16 mb-4 gap-3">
+            <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 text-center sm:text-left">
               <div className="relative">
                 <img
                   src={
@@ -118,38 +123,37 @@ export default function UserProfile() {
                     "https://static.vecteezy.com/system/resources/previews/009/292/652/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
                   }
                   alt={userInfo?.name || "User"}
-                  className="w-36 h-36 rounded-full object-cover border-4 border-white dark:border-slate-900 shadow-xl bg-white"
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white dark:border-[#1a1a1b] shadow-md bg-white"
                 />
               </div>
 
-              <div className="mb-2">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+              <div className="mb-0.5">
+                <h1 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight">
                   {userInfo?.name || "User Profile"}
                 </h1>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                  @
-                  {userInfo?.username ||
-                    userInfo?.email?.split("@")[0] ||
-                    "username"}
+                <p className="text-xs font-medium text-[#ff4500] mt-0.5">
+                  u/{userInfo?.username || userInfo?.email?.split("@")[0] || "username"}
                 </p>
 
-                {/* 🎯 إحصائيات قابلة للضغط لتفتح المودال */}
-                <div className="flex items-center justify-center md:justify-start gap-4 mt-3 text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-300">
+                {/* Follower / Following Metric Links */}
+                <div className="flex items-center justify-center sm:justify-start gap-3 mt-2 text-xs font-semibold text-gray-600 dark:text-gray-300">
                   <button
+                    type="button"
                     onClick={() => setModalType("followers")}
-                    className="hover:text-[#149188] transition cursor-pointer"
+                    className="hover:text-[#ff4500] transition cursor-pointer"
                   >
-                    <strong className="text-gray-900 dark:text-white">
+                    <strong className="text-gray-900 dark:text-white font-bold">
                       {userInfo?.followersCount || 0}
                     </strong>{" "}
                     Followers
                   </button>
                   <span>•</span>
                   <button
+                    type="button"
                     onClick={() => setModalType("following")}
-                    className="hover:text-[#149188] transition cursor-pointer"
+                    className="hover:text-[#ff4500] transition cursor-pointer"
                   >
-                    <strong className="text-gray-900 dark:text-white">
+                    <strong className="text-gray-900 dark:text-white font-bold">
                       {userInfo?.followingCount || 0}
                     </strong>{" "}
                     Following
@@ -158,26 +162,26 @@ export default function UserProfile() {
               </div>
             </div>
 
-            {/* زر الـ Follow */}
-            <div className="flex items-center gap-3 w-full md:w-auto justify-center pb-2">
+            {/* Follow / Following Button */}
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-center pb-1">
               <button
                 type="button"
                 onClick={() => handleFollow()}
                 disabled={isFollowPending}
-                className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition cursor-pointer shadow-sm disabled:opacity-50 ${
+                className={`flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold transition cursor-pointer shadow-2xs disabled:opacity-50 ${
                   isFollowing
-                    ? "bg-slate-100 dark:bg-slate-800 text-gray-700 dark:text-gray-200 hover:bg-red-50 hover:text-red-600 border border-gray-200 dark:border-slate-700"
-                    : "bg-[#149188] hover:bg-[#10766f] text-white"
+                    ? "bg-gray-100 dark:bg-[#272729] text-gray-700 dark:text-gray-200 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/20 border border-gray-200 dark:border-[#343536]"
+                    : "bg-[#ff4500] hover:bg-[#e03d00] text-white"
                 }`}
               >
                 {isFollowing ? (
                   <>
-                    <UserCheck className="w-4 h-4" />
+                    <UserCheck className="w-3.5 h-3.5" />
                     <span>Following</span>
                   </>
                 ) : (
                   <>
-                    <UserPlus className="w-4 h-4" />
+                    <UserPlus className="w-3.5 h-3.5" />
                     <span>Follow</span>
                   </>
                 )}
@@ -185,51 +189,58 @@ export default function UserProfile() {
             </div>
           </div>
 
-          <div className="border-t border-gray-100 dark:border-slate-800 pt-4 flex gap-6 text-sm font-semibold text-[#149188]">
-            <span className="border-b-2 border-[#149188] pb-3 cursor-pointer">
-              Posts
+          <div className="border-t border-gray-200 dark:border-[#343536] pt-3 flex gap-4 text-xs font-bold text-gray-900 dark:text-white">
+            <span className="border-b-2 border-[#ff4500] pb-2 cursor-pointer text-[#ff4500]">
+              Posts ({userPosts.length})
             </span>
           </div>
         </div>
       </div>
 
-      {/* 📄 لستة البوستات */}
-      <div className="max-w-2xl mx-auto px-4 mt-6 space-y-4">
+      {/* User Posts Feed */}
+      <div className="space-y-3">
         {isPostsLoading ? (
           <div className="flex justify-center py-10">
-            <LoaderApi />
+            <LoaderApi fullScreen={false} />
           </div>
         ) : userPosts.length > 0 ? (
           userPosts.map((post: any) => <PostCard key={post._id} post={post} />)
         ) : (
-          <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800 shadow-sm">
-            <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-sm font-medium text-gray-500">
+          <div className="text-center py-12 bg-white dark:bg-[#1a1a1b] rounded-xl border border-gray-200 dark:border-[#343536] shadow-2xs">
+            <FileText className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
               No posts available yet.
             </p>
           </div>
         )}
       </div>
 
-      {/* 🟢 نافذة منبثقة (Modal) لعرض قائمة الـ Followers أو Following */}
+      {/* Followers / Following List Modal */}
       {modalType && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
-          <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-slate-800 animate-in fade-in zoom-in duration-200">
+        <div
+          onClick={() => setModalType(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150 cursor-pointer"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-[#1a1a1b] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-[#343536] cursor-default"
+          >
             {/* Header Modal */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800">
-              <h3 className="text-base font-bold text-gray-900 dark:text-white capitalize">
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-200 dark:border-[#343536]">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white capitalize">
                 {modalType}
               </h3>
               <button
+                type="button"
                 onClick={() => setModalType(null)}
-                className="p-1 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                className="p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#272729] transition cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* List */}
-            <div className="max-h-80 overflow-y-auto p-4 space-y-3">
+            <div className="max-h-80 overflow-y-auto p-3 space-y-1.5">
               {currentList && currentList.length > 0 ? (
                 currentList.map((user: any) => {
                   const targetId = user._id || user.id;
@@ -237,10 +248,10 @@ export default function UserProfile() {
                     <div
                       key={targetId}
                       onClick={() => {
-                        setModalType(null); // قفل المودال
-                        navigate(`/UserProfile/${targetId}`); // الانتقال لبروفايله
+                        setModalType(null);
+                        navigate(`/UserProfile/${targetId}`);
                       }}
-                      className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-800 transition cursor-pointer"
+                      className="flex items-center gap-2.5 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#272729] transition cursor-pointer"
                     >
                       <img
                         src={
@@ -248,21 +259,21 @@ export default function UserProfile() {
                           "https://static.vecteezy.com/system/resources/previews/009/292/652/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"
                         }
                         alt={user.name}
-                        className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-slate-700"
+                        className="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-[#343536] shrink-0"
                       />
-                      <div>
-                        <h4 className="text-sm font-semibold text-gray-900 dark:text-white hover:underline">
+                      <div className="truncate">
+                        <h4 className="text-xs font-semibold text-gray-900 dark:text-white hover:underline truncate">
                           {user.name}
                         </h4>
-                        <p className="text-xs text-gray-400">
-                          @{user.username || "user"}
+                        <p className="text-[10px] text-gray-400 truncate">
+                          u/{user.username || "user"}
                         </p>
                       </div>
                     </div>
                   );
                 })
               ) : (
-                <div className="text-center py-8 text-gray-400 text-sm">
+                <div className="text-center py-8 text-gray-400 text-xs">
                   No {modalType} found.
                 </div>
               )}

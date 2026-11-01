@@ -46,11 +46,11 @@ export default function PostContent({
   const getPrivacyIcon = (privacy?: string) => {
     switch (privacy) {
       case "friends":
-        return <Users className="w-3 h-3" />;
+        return <Users className="w-3 h-3 text-gray-400" />;
       case "private":
-        return <Lock className="w-3 h-3" />;
+        return <Lock className="w-3 h-3 text-gray-400" />;
       default:
-        return <Globe className="w-3 h-3" />;
+        return <Globe className="w-3 h-3 text-gray-400" />;
     }
   };
 
@@ -58,19 +58,19 @@ export default function PostContent({
     <div
       className={
         isSharedPost
-          ? "border border-gray-100 dark:border-slate-800 rounded-2xl p-4 bg-slate-50/50 dark:bg-slate-800/40"
+          ? "border border-gray-200 dark:border-[#343536] rounded-xl p-3 bg-gray-50/60 dark:bg-[#121213] mb-3"
           : ""
       }
     >
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between mb-2.5">
+        <div className="flex items-center gap-2.5">
           <img
             src={displayedUser?.photo || DEFAULT_PHOTO}
             alt={displayedUser?.name || "User"}
             className={
               isSharedPost
-                ? "w-8 h-8 rounded-full object-cover border border-gray-100 dark:border-slate-800"
-                : "w-10 h-10 rounded-full object-cover border border-gray-100 dark:border-slate-800"
+                ? "w-7 h-7 rounded-full object-cover border border-gray-200 dark:border-[#343536]"
+                : "w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-[#343536]"
             }
             onError={(e) => {
               e.currentTarget.src = DEFAULT_PHOTO;
@@ -82,16 +82,17 @@ export default function PostContent({
             onClick={() => {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
+            className="group"
           >
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white hover:underline">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <h3 className="text-xs font-bold text-gray-900 dark:text-gray-100 group-hover:underline">
                   {displayedUser?.name || "Unknown User"}
                 </h3>
 
                 {displayedUser?.username && (
-                  <span className="text-xs text-gray-400 dark:text-gray-500">
-                    @{displayedUser.username}
+                  <span className="text-[11px] text-gray-400 dark:text-gray-500">
+                    u/{displayedUser.username}
                   </span>
                 )}
               </div>
@@ -105,7 +106,7 @@ export default function PostContent({
                 {isEditedLocally && (
                   <>
                     <span>•</span>
-                    <span className="font-medium text-green-500">Edited</span>
+                    <span className="font-medium text-amber-500">Edited</span>
                   </>
                 )}
               </div>
@@ -126,7 +127,7 @@ export default function PostContent({
       </div>
 
       {displayedBody && (
-        <div className="mb-4 text-sm text-gray-800 dark:text-gray-200 leading-relaxed break-words whitespace-pre-line">
+        <div className="mb-3 text-sm text-gray-900 dark:text-gray-100 leading-relaxed break-words whitespace-pre-line font-normal">
           {displayedBody}
         </div>
       )}
@@ -134,18 +135,18 @@ export default function PostContent({
       {displayedImage && (
         <div
           onClick={() => setIsImageModalOpen(true)}
-          className="mb-4 rounded-2xl overflow-hidden border border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-950 flex items-center justify-center max-h-[500px] cursor-pointer group relative"
+          className="mb-3 rounded-xl overflow-hidden border border-gray-200 dark:border-[#343536] bg-black/5 dark:bg-black/20 flex items-center justify-center max-h-[500px] cursor-pointer group relative"
         >
           <img
             src={displayedImage}
             alt="Post media"
-            className="w-full h-auto max-h-[500px] object-contain transition duration-300 group-hover:scale-[1.01]"
+            className="w-full h-auto max-h-[500px] object-contain transition duration-200 group-hover:scale-[1.005]"
           />
           <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition pointer-events-none" />
         </div>
       )}
 
-      {/* استدعاء المودل العام لعرض الصورة */}
+      {/* Image Modal Lightbox */}
       {displayedImage && (
         <ImageModal
           isOpen={isImageModalOpen}

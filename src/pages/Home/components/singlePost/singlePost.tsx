@@ -6,6 +6,7 @@ import PostCard from "../PostCard/PostCard";
 import CreateComment from "../commentCreation/commentCreation";
 import { IoClose } from "react-icons/io5";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 export default function SinglePost() {
   const { id } = useParams();
@@ -13,8 +14,22 @@ export default function SinglePost() {
   const navigate = useNavigate();
 
   const handleClose = () => {
-    navigate(-1);
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   function getPostDetails() {
     return axios.get(`https://route-posts.routemisr.com/posts/${id}`, {
@@ -29,58 +44,61 @@ export default function SinglePost() {
     queryFn: getPostDetails,
     enabled: !!id,
   });
+
   if (isError) {
     toast.error("post not avalibal");
-    return 
+    return;
   }
   const post = data?.data?.data?.post;
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4"
+      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 cursor-pointer"
       onClick={handleClose}
     >
       {/* Modal Container */}
       <div
-        className="relative w-full max-w-2xl h-[85vh] sm:h-[90vh] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100 dark:border-slate-800 transition-colors"
+        className="relative w-full max-w-2xl h-[85vh] sm:h-[90vh] bg-white dark:bg-[#1a1a1b] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 dark:border-[#343536] transition-colors cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 1. Header (ثابت في الأعلى) */}
-        <div className="shrink-0 flex items-center justify-between p-3 sm:p-4 border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 z-10">
-          <h2 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white mx-auto truncate max-w-[80%] text-center">
-            {post?.user?.name ? `${post.user.name}'s Post` : "Single Post"}
+        {/* 1. Header */}
+        <div className="shrink-0 flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 dark:border-[#343536] bg-white dark:bg-[#1a1a1b] z-10">
+          <h2 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mx-auto truncate max-w-[80%] text-center">
+            {post?.user?.name ? `${post.user.name}'s Post` : "Post Details"}
           </h2>
 
           <button
+            type="button"
             onClick={handleClose}
-            className="absolute left-3 sm:left-4 top-3.5 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-600 dark:text-gray-300 flex items-center justify-center transition"
+            className="absolute right-3 sm:right-4 top-3 w-7 h-7 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-[#272729] dark:hover:bg-[#343536] text-gray-600 dark:text-gray-300 flex items-center justify-center transition cursor-pointer"
+            title="Close"
           >
-            <IoClose className="w-5 h-5" />
+            <IoClose className="w-4 h-4" />
           </button>
         </div>
 
-        {/* 2. Middle Content (البوست والتعليقات بس هما اللي بيعملوا سكرول) */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-5 space-y-4 custom-scrollbar">
+        {/* 2. Middle Content */}
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3">
           {isLoading ? (
             <div className="h-full flex justify-center items-center py-12">
-              <LoaderApi />
+              <LoaderApi fullScreen={false} />
             </div>
           ) : isError ? (
-            <div className="py-8 text-center text-red-500 font-semibold text-sm">
-              {error&& "Failed to load post"}
+            <div className="py-8 text-center text-red-500 font-semibold text-xs sm:text-sm">
+              {error && "Failed to load post"}
             </div>
           ) : post ? (
             <PostCard post={post} postDetails={true} />
           ) : (
-            <div className="py-8 text-center text-gray-400 text-sm">
+            <div className="py-8 text-center text-gray-400 text-xs sm:text-sm">
               Post not found
             </div>
           )}
         </div>
 
-        {/* 3. Sticky Bottom Input (ثابت تحت وواضح دايماً من غير ما السكرول يغطيه) */}
+        {/* 3. Sticky Bottom Input */}
         {post && (
-          <div className="shrink-0 p-3 sm:p-4 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 z-10">
+          <div className="shrink-0 p-3 bg-white dark:bg-[#1a1a1b] border-t border-gray-200 dark:border-[#343536] z-10">
             <CreateComment postId={id as string} />
           </div>
         )}

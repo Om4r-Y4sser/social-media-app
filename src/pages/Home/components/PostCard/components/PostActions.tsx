@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import {
-  
   MessageSquare,
   Share2,
   Bookmark,
@@ -35,66 +34,66 @@ export default function PostActions({
   postDetails,
 }: PostActionsProps) {
   return (
-    <div className="flex items-center justify-between pt-2">
-      {/* Like */}
+    <div className="flex items-center gap-1.5 sm:gap-2 pt-1 flex-wrap">
+      {/* Upvote / Like Pill */}
       <button
         disabled={isPending}
         onClick={mutate}
-        className={`flex-1 cursor-pointer flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold transition ${
+        className={`cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition ${
           isLiked
-            ? "text-blue-500 bg-blue-50 dark:bg-blue-950/30"
-            : "text-gray-600 dark:text-gray-400 hover:text-blue-800 dark:hover:text-blue-800"
+            ? "text-[#ff4500] bg-[#ff4500]/10 dark:bg-[#ff4500]/20 font-bold"
+            : "text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-[#272729] hover:bg-gray-200 dark:hover:bg-[#343536]"
         }`}
       >
         <BiLike 
-          className={`w-4 h-4 ${isLiked ? "fill-blue-500" : ""}`}
+          className={`w-3.5 h-3.5 ${isLiked ? "fill-[#ff4500] text-[#ff4500]" : ""}`}
         />
-
-        <span>{isPending ? "Liking..." : "Like"}</span>
+        <span>{isPending ? "Updating..." : isLiked ? "Upvoted" : "Upvote"}</span>
       </button>
 
-      {/* Comment */}
+      {/* Comment Pill */}
       {postDetails ? (
-        <button className="flex-1 cursor-pointer flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
-          <MessageSquare className="w-4 h-4" />
-          <span>Comment</span>
+        <button className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-[#272729] hover:bg-gray-200 dark:hover:bg-[#343536] transition">
+          <MessageSquare className="w-3.5 h-3.5" />
+          <span>Comments</span>
         </button>
       ) : (
         <Link
           to={`/postDetails/${postId}`}
-          className="flex-1 flex items-center justify-center"
+          className="flex items-center"
         >
-          <span className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
-            <MessageSquare className="w-4 h-4" />
-            <span>Comment</span>
+          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-[#272729] hover:bg-gray-200 dark:hover:bg-[#343536] transition">
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Comments</span>
           </span>
         </Link>
       )}
 
-      {/* Share */}
+      {/* Share Pill */}
       <button
         disabled={loadingShare}
         onClick={mutateShare}
-        className="flex-1 cursor-pointer flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition disabled:opacity-50"
+        className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-[#272729] hover:bg-gray-200 dark:hover:bg-[#343536] transition disabled:opacity-50"
       >
-        <Share2 className="w-4 h-4" />
-
+        <Share2 className="w-3.5 h-3.5" />
         <span>{loadingShare ? "Sharing..." : "Share"}</span>
       </button>
 
-      {/* Bookmark */}
+      {/* Bookmark Pill */}
       <button
         disabled={loadingBookmarked}
         onClick={mutateBookmark}
-        className={`p-2 cursor-pointer rounded-xl transition ${
+        className={`cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition ml-auto ${
           isBookmarked
-            ? "text-[#149188] bg-teal-50 dark:bg-teal-950/30"
-            : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+            ? "text-[#ff4500] bg-[#ff4500]/10 dark:bg-[#ff4500]/20 font-bold"
+            : "text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-[#272729] hover:bg-gray-200 dark:hover:bg-[#343536]"
         }`}
+        title={isBookmarked ? "Remove Bookmark" : "Save Post"}
       >
         <Bookmark
-          className={`w-4 h-4 ${isBookmarked ? "fill-[#149188]" : ""}`}
+          className={`w-3.5 h-3.5 ${isBookmarked ? "fill-[#ff4500]" : ""}`}
         />
+        <span className="hidden sm:inline">{isBookmarked ? "Saved" : "Save"}</span>
       </button>
     </div>
   );

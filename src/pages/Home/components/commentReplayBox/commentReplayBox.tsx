@@ -13,7 +13,7 @@ import {
 } from "../../../../schemas/posts.schema";
 
 interface CommentReplyBoxProps {
-  onClose?: () => void; // دالة اختيارية لو حابب تقفله من الأب
+  onClose?: () => void;
   commentID: string;
   postId: string;
 }
@@ -24,12 +24,11 @@ export default function CommentReplyBox({
   commentID,
 }: CommentReplyBoxProps) {
   const user = useContext(userDataContext);
-  // const userData = user?.userData;
   const [isClose, setIsClose] = useState(false);
-  let userdata = user?.userData;
+  const userdata = user?.userData;
 
-  // لو المستخدم ضغط إغلاق، ما نرضش الكومبوننت ده نهائياً
   if (isClose) return null;
+
   const form = useForm<PostSchemaType>({
     defaultValues: {
       content: "",
@@ -56,23 +55,23 @@ export default function CommentReplyBox({
       },
     );
   }
+
   const { isPending, mutate } = useMutation({
     mutationFn: createReplay,
-
     onSuccess: () => {
       toast.success("Comment created successfully");
       query.invalidateQueries({
         queryKey: ["getAllReplies", postId, commentID],
       });
       reset();
-       setIsClose(true);
-    if (onClose) onClose();
+      setIsClose(true);
+      if (onClose) onClose();
     },
-
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "Failed to create comment");
     },
   });
+
   function handelReplay(value: PostSchemaType) {
     formdata.append("content", value.content);
    
@@ -89,9 +88,10 @@ export default function CommentReplyBox({
   if (formState.errors.image) {
     toast.error(`${formState.errors.image.message}`);
   }
+
   return (
     <div
-      className="relative w-full bg-slate-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-3 shadow-sm transition-colors"
+      className="relative w-full bg-white dark:bg-[#1a1a1b] border border-gray-200 dark:border-[#343536] rounded-xl p-2.5 sm:p-3 shadow-2xs transition-colors"
       dir="ltr"
     >
       {/* Close Button Handler */}
@@ -101,53 +101,47 @@ export default function CommentReplyBox({
           setIsClose(true);
           if (onClose) onClose();
         }}
-        className="absolute top-2.5 right-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1"
+        className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition p-1 cursor-pointer"
         title="Close"
       >
         <IoCloseSharp className="w-4 h-4" />
       </button>
 
       {/* Input area with user avatar */}
-      <div className="flex items-start gap-3 mt-1">
-        {/* Current User Avatar */}
+      <div className="flex items-start gap-2.5 mt-0.5">
         <img
-          src={userdata?.photo}
-          alt={userdata?.name}
-          className="w-7 h-7 rounded-full object-cover shrink-0 border border-gray-200 dark:border-slate-700 mt-1"
+          src={userdata?.photo || "https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/default-profile.png"}
+          alt={userdata?.name || "User"}
+          className="w-7 h-7 rounded-full object-cover shrink-0 border border-gray-200 dark:border-[#343536] mt-0.5"
         />
 
-        {/* Input & Actions Container */}
         <form
           onSubmit={handleSubmit(handelReplay)}
-          className="flex-1 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#149188] transition"
+          className="flex-1 bg-[#f6f7f8] dark:bg-[#121213] border border-gray-200 dark:border-[#343536] focus-within:border-[#ff4500] rounded-xl px-3 py-2 transition"
         >
-          {/* Textarea for reply */}
           <textarea
             {...register("content")}
             rows={2}
             placeholder="Write a reply..."
-            className="w-full bg-transparent text-xs sm:text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none resize-none"
+            className="w-full bg-transparent text-xs sm:text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none resize-none"
           />
 
-          {/* Bottom Toolbar inside the box (Attach image & Send button) */}
-          <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-slate-700/60 mt-1">
-            {/* Attach Image Option */}
-            <label className="text-gray-400 hover:text-[#149188] dark:hover:text-[#149188] transition p-1">
+          <div className="flex items-center justify-between pt-2 border-t border-gray-200/60 dark:border-[#272729] mt-1">
+            <label 
+              className="text-gray-400 hover:text-[#ff4500] dark:hover:text-[#ff4500] transition p-1 cursor-pointer"
+              title="Attach image"
+            >
               <input hidden {...register("image")} type="file" />
               <Image className="w-4 h-4" />
             </label>
 
-            {/* Send Reply Button */}
             <button
               type="submit"
               disabled={isPending}
-              className="p-1.5 sm:px-3 disabled:bg-slate-800 disabled:cursor-not-allowed sm:py-1.5 bg-[#149188] hover:bg-[#0f736c] disabled:opacity-40 text-white rounded-xl flex items-center gap-1.5 text-xs font-semibold transition shadow-sm"
+              className="px-3 py-1 bg-[#ff4500] hover:bg-[#e03d00] disabled:opacity-40 text-white rounded-full flex items-center gap-1.5 text-xs font-bold transition shadow-2xs cursor-pointer"
             >
-              <span className="hidden sm:inline">
-                {" "}
-                {isPending ? "Posting..." : "Reply"}{" "}
-              </span>
-              <Send className="w-3.5 h-3.5" />
+              <span>{isPending ? "Posting..." : "Reply"}</span>
+              <Send className="w-3 h-3" />
             </button>
           </div>
         </form>

@@ -47,6 +47,16 @@ export default function CreatePostModal({
     }
   }, [isOpen, initialBody]);
 
+  // إغلاق المودال بزر Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   // دالة الإرسال (تفرق بين إنشاء بوست جديد أو تعديل بوست موجود)
   const mutationFn = (formdata: FormData) => {
     const token = localStorage.getItem("userToken");
@@ -62,7 +72,6 @@ export default function CreatePostModal({
         { headers },
       );
     } else {
-      // 👈 لو إنشاء جديد
       return axios.post(`https://route-posts.routemisr.com/posts`, formdata, {
         headers,
       });
@@ -123,16 +132,23 @@ export default function CreatePostModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-150 cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-lg bg-white dark:bg-[#1a1a1b] rounded-2xl shadow-2xl border border-gray-200 dark:border-[#343536] overflow-hidden flex flex-col max-h-[90vh] cursor-default"
+      >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-slate-800">
-          <h3 className="text-sm font-bold text-gray-900 dark:text-white mx-auto">
-            {isEditMode ? "Edit Post" : "Create Post"}
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-200 dark:border-[#343536]">
+          <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+            {isEditMode ? "Edit Post" : "Create a Post"}
           </h3>
           <button
+            type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-gray-500 hover:bg-gray-200 dark:hover:bg-slate-700 transition cursor-pointer"
+            className="w-7 h-7 rounded-full bg-gray-100 dark:bg-[#272729] flex items-center justify-center text-gray-500 hover:text-gray-900 dark:hover:text-white transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -146,14 +162,14 @@ export default function CreatePostModal({
               "https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/default-profile.png"
             }
             alt={userData?.name || "User"}
-            className="w-10 h-10 rounded-full object-cover border border-gray-100 dark:border-slate-800"
+            className="w-9 h-9 rounded-full object-cover border border-gray-200 dark:border-[#343536]"
           />
           <div>
             <h4 className="text-xs font-bold text-gray-900 dark:text-white">
               {userData?.name || "Unknown User"}
             </h4>
-            <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-[10px] text-gray-600 dark:text-gray-300 w-fit mt-0.5">
-              <Globe className="w-3 h-3" />
+            <div className="flex items-center gap-1 bg-gray-100 dark:bg-[#272729] px-2 py-0.5 rounded-full text-[10px] text-gray-600 dark:text-gray-300 w-fit mt-0.5">
+              <Globe className="w-2.5 h-2.5" />
               <span>Public</span>
             </div>
           </div>
@@ -163,22 +179,23 @@ export default function CreatePostModal({
         <div className="p-5 flex-1 overflow-y-auto">
           <textarea
             ref={textInputRef}
-            placeholder="What's on your mind?"
+            placeholder="What are your thoughts?"
             rows={4}
             className="w-full bg-transparent text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none resize-none"
           />
 
           {/* Image Preview Box */}
           {selectedImage && (
-            <div className="relative mt-3 rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-700 max-h-60 bg-black/5">
+            <div className="relative mt-3 rounded-xl overflow-hidden border border-gray-200 dark:border-[#343536] max-h-60 bg-black/5">
               <img
                 src={selectedImage}
                 alt="Upload preview"
                 className="w-full h-full object-cover max-h-60"
               />
               <button
+                type="button"
                 onClick={handleRemoveImage}
-                className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center transition cursor-pointer"
+                className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 hover:bg-black/90 text-white flex items-center justify-center transition cursor-pointer"
                 title="Remove image"
               >
                 <X className="w-4 h-4" />
@@ -189,13 +206,16 @@ export default function CreatePostModal({
 
         {/* Add to your post section */}
         <div className="px-5 pb-3">
-          <div className="flex items-center justify-between border border-gray-200 dark:border-slate-700 rounded-2xl p-3">
-            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-              Add to your post
+          <div className="flex items-center justify-between border border-gray-200 dark:border-[#343536] rounded-xl p-2.5 bg-gray-50/50 dark:bg-[#121213]">
+            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">
+              Add media
             </span>
             <div className="flex items-center gap-1">
-              <label className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 text-green-500 transition cursor-pointer">
-                <Image className="w-5 h-5" />
+              <label 
+                className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-[#272729] text-gray-600 dark:text-gray-300 hover:text-[#ff4500] transition cursor-pointer"
+                title="Add photo"
+              >
+                <Image className="w-4 h-4" />
                 <input
                   type="file"
                   accept="image/*"
@@ -206,31 +226,33 @@ export default function CreatePostModal({
 
               <button
                 type="button"
-                className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 text-blue-500 transition"
+                className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-[#272729] text-gray-400 transition"
+                title="Video (Coming soon)"
               >
-                <Video className="w-5 h-5" />
+                <Video className="w-4 h-4" />
               </button>
               <button
                 type="button"
-                className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 text-amber-500 transition"
+                className="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-[#272729] text-gray-400 transition"
+                title="Emoji"
               >
-                <Smile className="w-5 h-5" />
+                <Smile className="w-4 h-4" />
               </button>
             </div>
           </div>
         </div>
 
         {/* Submit Button */}
-        <div className="p-5 pt-2">
+        <div className="p-5 pt-1">
           <button
             type="button"
             onClick={handleSubmit}
             disabled={isPending}
-            className="w-full bg-[#149188] hover:bg-[#117a72] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-2xl text-xs transition cursor-pointer flex items-center justify-center gap-2"
+            className="w-full bg-[#ff4500] hover:bg-[#e03d00] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-2 rounded-full text-xs transition cursor-pointer flex items-center justify-center gap-2 shadow-2xs"
           >
             {isPending ? (
               <>
-                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                 <span>{isEditMode ? "Updating..." : "Posting..."}</span>
               </>
             ) : isEditMode ? (

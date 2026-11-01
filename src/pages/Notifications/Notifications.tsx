@@ -85,11 +85,11 @@ export default function NotificationsPopover() {
   });
 
   const all = useMemo(() => data?.pages.flat() ?? [], [data]);
-  const fresh = all.filter((n) => !n.isRead); // "New"
-  const earlier = all.filter((n) => n.isRead); // "Earlier" / Read tab
+  const fresh = all.filter((n) => !n.isRead);
+  const earlier = all.filter((n) => n.isRead);
   const isEmpty = (tab === "all" ? all : earlier).length === 0;
 
-  /* 3. Mark one as read (optimistic) */
+  /* Mark one as read (optimistic) */
   const markAsRead = useMutation({
     mutationFn: async (id: string) => {
       const res = await api.patch(`/notifications/${id}/read`, {});
@@ -194,7 +194,7 @@ export default function NotificationsPopover() {
     items.length > 0 && (
       <section>
         {title && (
-          <h3 className="px-4 pt-3 pb-1 text-sm font-bold text-gray-900 dark:text-white">
+          <h3 className="px-4 pt-2.5 pb-1 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
             {title}
           </h3>
         )}
@@ -211,32 +211,32 @@ export default function NotificationsPopover() {
 
   return (
     <div className="relative" ref={popoverRef}>
-      {/* Bell */}
+      {/* Bell Trigger */}
       <button
+        type="button"
         onClick={() => setIsOpen((v) => !v)}
         aria-label="Notifications"
         aria-expanded={isOpen}
-        className={`relative p-2.5 rounded-xl transition-all cursor-pointer ${
+        className={`relative p-2 rounded-full transition-colors cursor-pointer ${
           isOpen
-            ? "bg-[#149188]/10 text-[#149188]"
-            : "bg-slate-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:text-[#149188]"
+            ? "bg-[#ff4500]/10 text-[#ff4500]"
+            : "hover:bg-gray-100 dark:hover:bg-[#272729] text-gray-600 dark:text-gray-300 hover:text-[#ff4500] dark:hover:text-[#ff4500]"
         }`}
       >
-        <Bell className={`w-4 h-4 ${isOpen ? "fill-[#149188]/20" : ""}`} />
+        <Bell className={`w-5 h-5 ${isOpen ? "fill-[#ff4500]/20" : ""}`} />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900">
+          <span className="absolute 0 top-0 right-0 min-w-[18px] h-[18px] px-1 bg-[#ff4500] text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white dark:ring-[#1a1a1b]">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
       </button>
 
-      {/* Popover - Responsive width & positioning for all screens */}
+      {/* Popover */}
       {isOpen && (
-        <div className="fixed sm:absolute left-1/2 sm:left-auto sm:right-0 -translate-x-1/2 sm:translate-x-0 top-16 sm:top-auto mt-3 w-[92vw] sm:w-[26rem] bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-          {" "}
+        <div className="fixed sm:absolute left-1/2 sm:left-auto sm:right-0 -translate-x-1/2 sm:translate-x-0 top-16 sm:top-auto mt-2 w-[92vw] sm:w-[24rem] bg-white dark:bg-[#1a1a1b] border border-gray-200 dark:border-[#343536] rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 pt-3.5">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+          <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-gray-100 dark:border-[#272729]">
+            <h2 className="text-sm font-bold text-gray-900 dark:text-white">
               Notifications
             </h2>
             <button
@@ -245,57 +245,59 @@ export default function NotificationsPopover() {
               }}
               title="Mark all as read"
               aria-label="Mark all as read"
-              className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-slate-800 transition cursor-pointer"
+              className="p-1.5 rounded-full text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#272729] transition cursor-pointer"
             >
               <CheckCheck className="w-4 h-4" />
             </button>
           </div>
-          {/* Tabs: All / Unread */}
-          <div className="flex items-center gap-2 px-4 pt-2 pb-2.5 border-b border-gray-100 dark:border-slate-800">
+
+          {/* Tabs: All / Read */}
+          <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 dark:border-[#272729]">
             {(["all", "read"] as Tab[]).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer ${
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition cursor-pointer ${
                   tab === t
-                    ? "bg-[#149188]/10 text-[#149188]"
-                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800"
+                    ? "bg-[#ff4500]/10 text-[#ff4500] font-bold"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#272729]"
                 }`}
               >
                 {t === "all" ? "All" : "Read"}
               </button>
             ))}
           </div>
+
           {/* List */}
-          <div className="max-h-[26rem] overflow-y-auto pb-2">
+          <div className="max-h-[24rem] overflow-y-auto pb-2">
             {isLoading ? (
-              <div className="flex items-center justify-center py-10">
-                <Loader2 className="w-5 h-5 text-[#149188] animate-spin" />
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 text-[#ff4500] animate-spin" />
               </div>
             ) : isError ? (
-              <div className="flex flex-col items-center py-10 px-4 text-center">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+              <div className="flex flex-col items-center py-8 px-4 text-center">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
                   Couldn't load notifications.
                 </p>
                 <button
                   onClick={() => refetch()}
-                  className="px-4 py-1.5 rounded-full bg-[#149188] text-white text-xs font-semibold cursor-pointer"
+                  className="px-3 py-1 rounded-full bg-[#ff4500] text-white text-xs font-bold cursor-pointer"
                 >
                   Try again
                 </button>
               </div>
             ) : isEmpty && !hasNextPage ? (
-              <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-                <BellOff className="w-9 h-9 text-gray-300 dark:text-gray-600 mb-2" />
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+              <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+                <BellOff className="w-8 h-8 text-gray-300 dark:text-gray-600 mb-2" />
+                <p className="text-xs font-bold text-gray-700 dark:text-gray-200">
                   {tab === "read"
                     ? "No read notifications"
                     : "No notifications yet"}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">
+                <p className="text-[11px] text-gray-400 mt-0.5">
                   {tab === "read"
                     ? "Notifications you've opened will show up here."
-                    : "Likes, comments and shares on your posts will show up here."}
+                    : "Activity on your posts will appear here."}
                 </p>
               </div>
             ) : (
@@ -314,12 +316,12 @@ export default function NotificationsPopover() {
                     <button
                       onClick={() => fetchNextPage()}
                       disabled={isFetchingNextPage}
-                      className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-slate-700 transition cursor-pointer disabled:opacity-60"
+                      className="w-full flex items-center justify-center gap-2 py-1.5 rounded-lg bg-gray-100 dark:bg-[#272729] text-xs font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#343536] transition cursor-pointer disabled:opacity-60"
                     >
                       {isFetchingNextPage && (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       )}
-                      See previous notifications
+                      <span>See previous notifications</span>
                     </button>
                   </div>
                 )}

@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { Lock, KeyRound, ShieldCheck, Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -7,9 +7,8 @@ import toast from "react-hot-toast";
 export default function Settings() {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [rePassword, setRePassword] = useState(""); // تأكيد الباسورد لو حابب تتأكد إنه مطابق
+  const [rePassword, setRePassword] = useState("");
 
-  // Mutation لتغيير الباسورد
   const changePasswordMutation = useMutation({
     mutationFn: async (data: { password: string; newPassword: string }) => {
       const token = localStorage.getItem("userToken");
@@ -27,13 +26,9 @@ export default function Settings() {
     },
     onSuccess: (response) => {
       toast.success("Password changed successfully!");
-      // لو الـ API بيرجع توكن جديد محتاج تحدثه في اللوكال ستورج:
-      console.log(response);
-      
       if (response?.token) {
         localStorage.setItem("userToken", response.token);
       }
-      // تفريغ الحقول بعد النجاح
       setPassword("");
       setNewPassword("");
       setRePassword("");
@@ -65,25 +60,25 @@ export default function Settings() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 sm:p-6">
+    <div className="w-full space-y-4 pb-8">
       {/* Page Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
-          <ShieldCheck className="w-6 h-6 text-[#149188]" />
+      <div>
+        <h1 className="text-xl sm:text-2xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+          <ShieldCheck className="w-5 h-5 text-[#ff4500]" />
           <span>Account Security</span>
         </h1>
-        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
-          Update your password to keep your account safe and secure.
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          Manage your password and security credentials.
         </p>
       </div>
 
       {/* Settings Card */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-sm border border-gray-100 dark:border-slate-800 transition-colors">
-        <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="bg-white dark:bg-[#1a1a1b] rounded-xl p-5 sm:p-6 shadow-2xs border border-gray-200 dark:border-[#343536] transition-colors">
+        <form onSubmit={handleSubmit} className="space-y-4">
           
           {/* Current Password */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
               Current Password
             </label>
             <div className="relative">
@@ -95,7 +90,7 @@ export default function Settings() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-50 dark:bg-slate-800 text-sm text-gray-800 dark:text-gray-100 py-3 pl-10 pr-4 rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:border-[#149188] transition"
+                className="w-full bg-[#f6f7f8] dark:bg-[#272729] text-xs sm:text-sm text-gray-900 dark:text-gray-100 py-2.5 pl-10 pr-3.5 rounded-xl border border-gray-200 dark:border-[#343536] focus:outline-none focus:border-[#ff4500] focus:bg-white dark:focus:bg-[#121213] transition"
                 required
               />
             </div>
@@ -103,7 +98,7 @@ export default function Settings() {
 
           {/* New Password */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
               New Password
             </label>
             <div className="relative">
@@ -115,15 +110,15 @@ export default function Settings() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-50 dark:bg-slate-800 text-sm text-gray-800 dark:text-gray-100 py-3 pl-10 pr-4 rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:border-[#149188] transition"
+                className="w-full bg-[#f6f7f8] dark:bg-[#272729] text-xs sm:text-sm text-gray-900 dark:text-gray-100 py-2.5 pl-10 pr-3.5 rounded-xl border border-gray-200 dark:border-[#343536] focus:outline-none focus:border-[#ff4500] focus:bg-white dark:focus:bg-[#121213] transition"
                 required
               />
             </div>
           </div>
 
-          {/* Confirm New Password (اختياري لزيادة الأمان) */}
+          {/* Confirm New Password */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
               Confirm New Password
             </label>
             <div className="relative">
@@ -135,22 +130,22 @@ export default function Settings() {
                 value={rePassword}
                 onChange={(e) => setRePassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-50 dark:bg-slate-800 text-sm text-gray-800 dark:text-gray-100 py-3 pl-10 pr-4 rounded-xl border border-gray-200 dark:border-slate-700 focus:outline-none focus:border-[#149188] transition"
+                className="w-full bg-[#f6f7f8] dark:bg-[#272729] text-xs sm:text-sm text-gray-900 dark:text-gray-100 py-2.5 pl-10 pr-3.5 rounded-xl border border-gray-200 dark:border-[#343536] focus:outline-none focus:border-[#ff4500] focus:bg-white dark:focus:bg-[#121213] transition"
               />
             </div>
           </div>
 
           {/* Submit Button */}
-          <div className="pt-4 flex justify-end">
+          <div className="pt-2 flex justify-end">
             <button
               type="submit"
               disabled={changePasswordMutation.isPending}
-              className="px-6 py-3 bg-[#149188] hover:bg-[#0f736c] text-white text-xs font-bold rounded-xl transition shadow-md cursor-pointer disabled:opacity-50 flex items-center gap-2"
+              className="px-5 py-2 bg-[#ff4500] hover:bg-[#e03d00] text-white text-xs font-bold rounded-full transition shadow-2xs cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
             >
               {changePasswordMutation.isPending && (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
               )}
-              <span>{changePasswordMutation.isPending ? "Saving..." : "Update Password"}</span>
+              <span>{changePasswordMutation.isPending ? "Updating..." : "Update Password"}</span>
             </button>
           </div>
 

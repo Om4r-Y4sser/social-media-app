@@ -4,12 +4,10 @@ import ProfileTabs from "./components/ProfileTabs/ProfileTabs";
 
 export default function Profile() {
   return (
-    <>
+    <div className="w-full space-y-3 pb-8">
       <ProfileHeader />
-      <div className="m-4">
-        <CreatePost />
-      </div>
+      <CreatePost />
       <ProfileTabs />
-    </>
+    </div>
   );
 }

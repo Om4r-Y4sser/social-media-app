@@ -23,32 +23,36 @@ export default function CreatePost() {
 
   return (
     <div
-      className="w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl p-3 sm:p-4 shadow-sm transition-colors mb-4"
+      className="w-full bg-white dark:bg-[#1a1a1b] border border-gray-200 dark:border-[#343536] rounded-xl p-3 shadow-2xs transition-colors"
       dir="ltr"
     >
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        {/* صورة البروفايل */}
+      <div className="flex items-center gap-3">
+        {/* User avatar */}
         <img
           src={
             userData?.photo ||
             "https://pub-3cba56bacf9f4965bbb0989e07dada12.r2.dev/linkedPosts/default-profile.png"
           }
           alt={userData?.name || "User"}
-          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover shrink-0 border border-gray-200 dark:border-slate-700"
+          className="w-9 h-9 rounded-full object-cover shrink-0 border border-gray-200 dark:border-[#343536]"
         />
 
-        {/* زرار فتح المودل (مضبوط ومقيد بـ min-w-0 عشان مايخرجش بره الشاشة) */}
+        {/* Input box trigger */}
         <button
+          type="button"
           onClick={() => setIsModalOpen(true)}
-          className="flex-1 min-w-0 bg-gray-100 dark:bg-slate-800/80 hover:bg-gray-200/70 dark:hover:bg-slate-800 transition rounded-full px-3.5 sm:px-4 py-2 sm:py-2.5 cursor-pointer text-left overflow-hidden"
+          className="flex-1 min-w-0 bg-[#f6f7f8] dark:bg-[#272729] hover:bg-white dark:hover:bg-[#121213] border border-gray-200 dark:border-[#343536] hover:border-gray-300 dark:hover:border-gray-500 transition rounded-lg px-3.5 py-2 cursor-pointer text-left overflow-hidden shadow-2xs"
         >
           <span className="block text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-normal truncate">
-            {`What's on your mind, ${userData?.name?.split(" ")[0] || "there"}?`}
+            {`Create Post as ${userData?.name?.split(" ")[0] || "user"}...`}
           </span>
         </button>
 
-        {/* زرار اختيار الصورة السريع */}
-        <label className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 text-green-500 transition cursor-pointer shrink-0">
+        {/* Quick image picker */}
+        <label 
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#272729] text-gray-500 dark:text-gray-400 hover:text-[#ff4500] transition cursor-pointer shrink-0"
+          title="Upload image"
+        >
           <Image className="w-5 h-5" />
           <input
             type="file"

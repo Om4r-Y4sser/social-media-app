@@ -8,12 +8,9 @@ import PostCard from "../../../Home/components/PostCard/PostCard";
 
 export default function ProfileTabs() {
   const [activeTab, setActiveTab] = useState<"posts" | "bookmarks">("posts");
-  
 
   const userContext = useContext(userDataContext);
   const userId = userContext?.userData?._id;
-
-
 
   const { data: postsData, isLoading: postsLoading } = useQuery({
     queryKey: ["getUserPosts", userId],
@@ -29,7 +26,6 @@ export default function ProfileTabs() {
     enabled: !!userId,
   });
 
-
   const { data: bookmarksData, isLoading: bookmarksLoading } = useQuery({
     queryKey: ["getUserBookmarks"],
     queryFn: () => {
@@ -41,51 +37,52 @@ export default function ProfileTabs() {
   });
 
   const myPosts = postsData?.data?.data?.posts || postsData?.data?.posts || [];
-  const bookmarksPosts = bookmarksData?.data?.data.bookmarks;
-// console.log(bookmarksPosts);
+  const bookmarksPosts = bookmarksData?.data?.data?.bookmarks || [];
 
   return (
     <div className="w-full">
       {/* Tabs Header */}
-      <div className="flex border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-2xl p-2 mb-4 shadow-sm">
+      <div className="flex bg-white dark:bg-[#1a1a1b] border border-gray-200 dark:border-[#343536] rounded-xl p-1 mb-3 shadow-2xs gap-1">
         <button
           type="button"
           onClick={() => setActiveTab("posts")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition cursor-pointer ${
+          className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-lg transition cursor-pointer ${
             activeTab === "posts"
-              ? "bg-[#149188] text-white shadow-sm"
-              : "text-gray-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+              ? "bg-[#ff4500] text-white shadow-2xs font-bold"
+              : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#272729]"
           }`}
         >
           <FileText className="w-4 h-4" />
-          <span>My Posts</span>
+          <span>My Posts ({myPosts.length})</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("bookmarks")}
-          className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold rounded-xl transition cursor-pointer ${
+          className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-lg transition cursor-pointer ${
             activeTab === "bookmarks"
-              ? "bg-[#149188] text-white shadow-sm"
-              : "text-gray-500 dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800"
+              ? "bg-[#ff4500] text-white shadow-2xs font-bold"
+              : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#272729]"
           }`}
         >
           <Bookmark className="w-4 h-4" />
-          <span>Bookmarks</span>
+          <span>Saved Posts ({bookmarksPosts.length})</span>
         </button>
       </div>
 
       {/* Tabs Content */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         {activeTab === "posts" && (
           <>
             {postsLoading ? (
-              <LoaderApi />
+              <LoaderApi fullScreen={false} />
             ) : myPosts.length > 0 ? (
               myPosts.map((post: any) => <PostCard key={post._id} post={post} />)
             ) : (
-              <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800">
-                <p className="text-sm text-gray-400">You haven't posted anything yet.</p>
+              <div className="text-center py-10 bg-white dark:bg-[#1a1a1b] rounded-xl border border-gray-200 dark:border-[#343536] shadow-2xs">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  You haven't posted anything yet.
+                </p>
               </div>
             )}
           </>
@@ -94,12 +91,14 @@ export default function ProfileTabs() {
         {activeTab === "bookmarks" && (
           <>
             {bookmarksLoading ? (
-              <LoaderApi />
+              <LoaderApi fullScreen={false} />
             ) : bookmarksPosts.length > 0 ? (
               bookmarksPosts.map((post: any) => <PostCard key={post._id} post={post} />)
             ) : (
-              <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-2xl border border-gray-100 dark:border-slate-800">
-                <p className="text-sm text-gray-400">No bookmarked posts found.</p>
+              <div className="text-center py-10 bg-white dark:bg-[#1a1a1b] rounded-xl border border-gray-200 dark:border-[#343536] shadow-2xs">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  No saved bookmarks found.
+                </p>
               </div>
             )}
           </>

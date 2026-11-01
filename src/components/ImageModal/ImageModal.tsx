@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { useEffect } from "react";
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -15,25 +16,40 @@ export default function ImageModal({
   altText = "Image preview",
   title = "Photo",
 }: ImageModalProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="relative max-w-2xl w-full bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-2xl p-4">
-        <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-slate-800 mb-3">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-xs p-4 animate-in fade-in duration-150 cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative max-w-2xl w-full bg-white dark:bg-[#1a1a1b] rounded-2xl overflow-hidden shadow-2xl p-4 border border-gray-200 dark:border-[#343536] cursor-default"
+      >
+        <div className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-[#343536] mb-3">
           <h3 className="text-sm font-bold text-gray-900 dark:text-white">
             {title}
           </h3>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-500 hover:text-red-500 transition cursor-pointer"
+            className="p-1 rounded-full bg-gray-100 dark:bg-[#272729] text-gray-500 hover:text-gray-900 dark:hover:text-white transition cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex items-center justify-center max-h-[75vh] overflow-hidden rounded-xl bg-slate-950">
+        <div className="flex items-center justify-center max-h-[75vh] overflow-hidden rounded-xl bg-black/40">
           <img
             src={imageUrl}
             alt={altText}
